@@ -1,10 +1,99 @@
-
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <title></title>
-    </head>
-    <body>
-        <p>Redirecting to login...</p>
-    </body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website Status Checker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        .box {
+            display: inline-block;
+            width: 200px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 10px;
+            text-align: center;
+        }
+
+        .icon {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .loading {
+            background-color: orange;
+        }
+
+        .online {
+            background-color: green;
+        }
+
+        .offline {
+            background-color: red;
+        }
+
+        .link {
+            display: block;
+            margin-top: 10px;
+            color: blue;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <div class="status">
+            <span class="icon loading" id="status1"></span>
+            <span>Website 1</span>
+        </div>
+        <a href="https://example1.com" target="_blank" class="link">Go to Website 1</a>
+    </div>
+
+    <div class="box">
+        <div class="status">
+            <span class="icon loading" id="status2"></span>
+            <span>Website 2</span>
+        </div>
+        <a href="https://example2.com" target="_blank" class="link">Go to Website 2</a>
+    </div>
+
+    <script>
+        async function checkWebsiteStatus(url, statusElementId) {
+            const statusElement = document.getElementById(statusElementId);
+
+            try {
+                const response = await fetch(url, { method: 'HEAD' });
+
+                if (response.ok) {
+                    statusElement.classList.remove('loading');
+                    statusElement.classList.add('online');
+                } else {
+                    throw new Error('Response not OK');
+                }
+            } catch (error) {
+                statusElement.classList.remove('loading');
+                statusElement.classList.add('offline');
+            }
+        }
+
+        function checkAllStatuses() {
+            checkWebsiteStatus('https://example1.com', 'status1');
+            checkWebsiteStatus('https://example2.com', 'status2');
+        }
+
+        // Check statuses on page load
+        checkAllStatuses();
+
+        // Optionally, recheck every 30 seconds
+        setInterval(checkAllStatuses, 30000);
+    </script>
+</body>
 </html>
